@@ -14,7 +14,7 @@
 #define RFM95_CS      4   // "B"
 #define RFM95_INT     3    // "C"
 
-#define RF95_FREQ 430.0
+#define RF95_FREQ 434.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
