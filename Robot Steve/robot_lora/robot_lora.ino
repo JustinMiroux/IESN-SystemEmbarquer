@@ -4,6 +4,7 @@
     - Changelog du 20/03/25: Moteur droite est un peu bizzare et droite et gauche sont maintenant inverser
     - Changelog du 21/03/25: Moteur focntione correctement, Added labo 5 
     - Changelog du 25/03/25: Maybe Lora Crash ducoup robot reste allumé last state of last received
+    - Changelog du 28/03/25: Changement du Lora, Lora précédent défectueux, robot roule bien mais encore rare perte de contrôles
 
 */
 
@@ -76,10 +77,10 @@ void setup() {
   rf95.setTxPower(23, false);
 }
 
-void loop() {
+int xAxis = 0;
+int yAxis = 0;
 
-  int xAxis = 0;
-  int yAxis = 0;
+void loop() {
 
   int buff;
   if (rf95.available())
@@ -104,9 +105,13 @@ void loop() {
       Serial.println("Message receiving failed");
     }
   }
-
+  //Serial.print("Valeur x post: ");
+  //Serial.println(xAxis);
+  //Serial.print("Valeur y post: ");
+  //Serial.println(yAxis);
   // Y-axis used for forward and backward control
   if (yAxis < 470) {
+    //Serial.println("boucle y < 470");
     // Set Motor A backward
     digitalWrite(in1, LOW);
     digitalWrite(in2, HIGH);
@@ -118,6 +123,7 @@ void loop() {
     motorSpeedB = map(yAxis, 470, 0, 0, 255);
   }
   else if (yAxis > 550) {
+    //Serial.println("boucle y > 550");
     // Set Motor A forward
     digitalWrite(in1, HIGH);
     digitalWrite(in2, LOW);
@@ -136,6 +142,7 @@ void loop() {
 
   // X-axis used for left and right control
   if (xAxis < 470) {
+    //Serial.println("boucle x < 470");
     // Convert the declining X-axis readings from 470 to 0 into increasing 0 to 255 value
     int xMapped = map(xAxis, 470, 0, 0, 255);
     // Move to left - decrease left motor speed, increase right motor speed
@@ -150,6 +157,7 @@ void loop() {
     }
   }
   if (xAxis > 550) {
+    //Serial.println("boucle x > 550");
     // Convert the increasing X-axis readings from 550 to 1023 into 0 to 255 value
     int xMapped = map(xAxis, 550, 1023, 0, 255);
     // Move right - decrease right motor speed, increase left motor speed

@@ -1,3 +1,12 @@
+/*
+    Robot 11 "Steve"
+
+    - Changelog du 20/03/25: Moteur droite est un peu bizzare et droite et gauche sont maintenant inverser
+    - Changelog du 21/03/25: Moteur focntione correctement, Added labo 5 
+    - Changelog du 25/03/25: Maybe Lora Crash ducoup robot reste allumé last state of last received
+
+*/
+
 #include <SPI.h>
 #include <RH_RF95.h>
 
@@ -26,8 +35,14 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 int motorSpeedA = 0;
 int motorSpeedB = 0;
 
-void setup()
-{
+void setup() {
+  pinMode(enA, OUTPUT);
+  pinMode(in1, OUTPUT);
+  pinMode(in2, OUTPUT);
+  pinMode(enB, OUTPUT);
+  pinMode(in3, OUTPUT);
+  pinMode(in4, OUTPUT);
+
   pinMode(LED, OUTPUT);
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
@@ -38,7 +53,7 @@ void setup()
   }
   delay(100);
 
-  Serial.println("Lancement du test");
+  Serial.println("Feather LoRa RX Test!");
 
   // manual reset
   digitalWrite(RFM95_RST, LOW);
@@ -47,25 +62,17 @@ void setup()
   delay(10);
 
   while (!rf95.init()) {
-    Serial.println("Lora init a pas marché bruh");
-    Serial.println("Petite attente avant nouveau essai");
-    delay(20)
+    Serial.println("LoRa radio init failed");
+    while (1);
   }
-  Serial.println("LoRa init radio ok");
 
-  // Defaults after init are 434.0MHz, modulation GFSK_Rb250Fd250, +13dbM
+  Serial.println("LoRa radio init Success");
+
   if (!rf95.setFrequency(RF95_FREQ)) {
-    Serial.println("Frequence échouee sadge dans le chat svp");
-    Serial.println("AGAIN!")
-    delay(20);
+    Serial.println("setFrequency failed");
+    while (1);
   }
-  Serial.print("Set frequence: "); Serial.println(RF95_FREQ);
-
-  // Defaults after init are 434.0MHz, 13dBm, Bw = 125 kHz, Cr = 4/5, Sf = 128chips/symbol, CRC on
-
-  // The default transmitter power is 13dBm, using PA_BOOST.
-  // If you are using RFM95/96/97/98 modules which uses the PA_BOOST transmitter pin, then
-  // you can set transmitter powers from 5 to 23 dBm:
+  Serial.print("Set Freq to: "); Serial.println(RF95_FREQ);
   rf95.setTxPower(23, false);
 }
 
@@ -94,15 +101,17 @@ void loop() {
     }
     else
     {
-      Serial.println("Reception echouee comme nos reves");
+      Serial.println("Message receiving failed");
     }
   }
 
+
   // Y-axis used for forward and backward control
   if (yAxis < 470) {
+    //Serial.println("Boucle y < 470");
     // Set Motor A backward
-    digitalWrite(in1, LOW);
-    digitalWrite(in2, HIGH);
+    digitalWrite(in1, HIGH);
+    digitalWrite(in2, LOW);
     // Set Motor B backward
     digitalWrite(in3, HIGH);
     digitalWrite(in4, LOW);
@@ -111,9 +120,10 @@ void loop() {
     motorSpeedB = map(yAxis, 470, 0, 0, 255);
   }
   else if (yAxis > 550) {
+    //Serial.println("Boucle x > 550");
     // Set Motor A forward
-    digitalWrite(in1, HIGH);
-    digitalWrite(in2, LOW);
+    digitalWrite(in1, LOW);
+    digitalWrite(in2, HIGH);
     // Set Motor B forward
     digitalWrite(in3, LOW);
     digitalWrite(in4, HIGH);
@@ -129,6 +139,7 @@ void loop() {
 
   // X-axis used for left and right control
   if (xAxis < 470) {
+    Serial.println("Boucle x < 470");
     // Convert the declining X-axis readings from 470 to 0 into increasing 0 to 255 value
     int xMapped = map(xAxis, 470, 0, 0, 255);
     // Move to left - decrease left motor speed, increase right motor speed
@@ -143,6 +154,7 @@ void loop() {
     }
   }
   if (xAxis > 550) {
+    Serial.println("Boucle x > 550");
     // Convert the increasing X-axis readings from 550 to 1023 into 0 to 255 value
     int xMapped = map(xAxis, 550, 1023, 0, 255);
     // Move right - decrease right motor speed, increase left motor speed
@@ -156,6 +168,9 @@ void loop() {
       motorSpeedB = 0;
     }
   }
+  else{
+    Serial.println("Aucune boucle entrée");
+  }
   // Prevent buzzing at low speeds (Adjust according to your motors. My motors couldn't start moving if PWM value was below value of 70)
   if (motorSpeedA < 70) {
     motorSpeedA = 0;
@@ -166,4 +181,3 @@ void loop() {
   analogWrite(enA, motorSpeedA); // Send PWM signal to motor A
   analogWrite(enB, motorSpeedB); // Send PWM signal to motor B
 }
-
