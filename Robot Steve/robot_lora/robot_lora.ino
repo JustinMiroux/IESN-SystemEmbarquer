@@ -10,6 +10,7 @@
 
 #include <SPI.h>
 #include <RH_RF95.h>
+#include <NewPing.h>
 
 #define RFM95_RST     2   // "A"
 #define RFM95_CS      4   // "B"
@@ -35,6 +36,13 @@ RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 int motorSpeedA = 0;
 int motorSpeedB = 0;
+
+//setup pin ultrason
+#define TRIGGER_PIN A1//bleu
+#define ECHO_PIN A2//vert
+#define MAX_DISTANCE 200
+//initialise la fonction sonar
+NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
 
 void setup() {
   pinMode(enA, OUTPUT);
@@ -180,4 +188,11 @@ void loop() {
   }
   analogWrite(enA, motorSpeedA); // Send PWM signal to motor A
   analogWrite(enB, motorSpeedB); // Send PWM signal to motor B
+
+  int uS = sonar.ping();
+  Serial.print("Ping: ")
+  Serial.pprint(uS / US_ROUNDTRIP_CM);
+  Serial.println("cm");
+
+
 }
