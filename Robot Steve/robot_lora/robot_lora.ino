@@ -13,7 +13,7 @@
 #include <RH_RF95.h>
 #include <NewPing.h>
 
-#define RFM95_RST     2   // "A"
+#define RFM95_RST     A2   // "A"
 #define RFM95_CS      4   // "B"
 #define RFM95_INT     3    // "C"
 
@@ -40,7 +40,7 @@ int motorSpeedB = 0;
 
 //setup pin ultrason
 #define TRIGGER_PIN A1//bleu
-#define ECHO_PIN A2//vert
+#define ECHO_PIN 2//vert
 #define MAX_DISTANCE 200
 //initialise la fonction sonar
 NewPing sonar(TRIGGER_PIN, ECHO_PIN, MAX_DISTANCE);
@@ -88,8 +88,16 @@ void setup() {
 
 int xAxis = 0;
 int yAxis = 0;
+int distance;
 
 void loop() {
+
+//sonar
+  int uS = sonar.ping();
+  //Serial.print("Ping: ");
+  distance = uS / US_ROUNDTRIP_CM;
+  //Serial.print(distance);
+  //Serial.println("cm");
 
   int buff;
   if (rf95.available())
@@ -104,11 +112,20 @@ void loop() {
       // RH_RF95::printBuffer("Received: ", buf, len);
       xAxis = buf[0] + buf[1]*256;
       yAxis = buf[2] + buf[3]*256;
-      Serial.print("Valeur x: ");
-      Serial.println(xAxis);
-      Serial.print("Valeur y: ");
-      Serial.println(yAxis);
+      //Serial.print("Valeur x: ");
+      //Serial.println(xAxis);
+      //Serial.print("Valeur y: ");
+      //Serial.println(yAxis);
+
+      int packet[1];
+      packet[0] = distance;
+      rf95.send((uint8_t*)packet,sizeof(packet));
+      rf95.waitPacketSent();
+      Serial.println("envoi distance");
+      Serial.println(distance);
+      delay(10);
     }
+
     else
     {
       Serial.println("Message receiving failed");
@@ -190,10 +207,5 @@ void loop() {
   analogWrite(enA, motorSpeedA); // Send PWM signal to motor A
   analogWrite(enB, motorSpeedB); // Send PWM signal to motor B
 
-  //sonar
-  int uS = sonar.ping();
-  Serial.print("Ping: ");
-  Serial.print(uS / US_ROUNDTRIP_CM);
-  Serial.println("cm");
-
+  
 }
