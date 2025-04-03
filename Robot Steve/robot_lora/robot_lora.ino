@@ -5,6 +5,7 @@
     - Changelog du 21/03/25: Moteur focntione correctement, Added labo 5 
     - Changelog du 25/03/25: Maybe Lora Crash ducoup robot reste allumé last state of last received
     - Changelog du 28/03/25: Changement du Lora, Lora précédent défectueux, robot roule bien mais encore rare perte de contrôles
+    - Changelog du 03/04/25: Ajout code pour sonar
 
 */
 
@@ -189,10 +190,10 @@ void loop() {
   analogWrite(enA, motorSpeedA); // Send PWM signal to motor A
   analogWrite(enB, motorSpeedB); // Send PWM signal to motor B
 
+  //sonar
   int uS = sonar.ping();
-  Serial.print("Ping: ")
-  Serial.pprint(uS / US_ROUNDTRIP_CM);
+  Serial.print("Ping: ");
+  Serial.print(uS / US_ROUNDTRIP_CM);
   Serial.println("cm");
-
 
 }
