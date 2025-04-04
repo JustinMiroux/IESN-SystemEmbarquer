@@ -6,15 +6,18 @@ import sys, serial, time
 data = ""
 portUSB = "/dev/ttyUSB0"
 ser = serial.Serial(portUSB,baudrate=115200, dsrdtr=False)
-time.sleep(1.5)
+time.sleep(2)
 
 for arg in sys.argv:
 
     if arg == "auto":
-        data = "auto\r\n"
+        data = "auto"
     
     elif arg == "manual":
-        data = "manual\r\n"
+        data = "manual"
 
 encoded_data = data.encode("utf-8")
 ser.write(encoded_data)
+ligne = ser.readline()
+strlignes = ligne.decode("utf-8")
+print(strlignes)
