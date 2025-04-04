@@ -54,6 +54,8 @@ void setup()
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
+int distance; //variable contenant distance reçue par robot
+
 void loop()
 {
   int xAxis = analogRead(A0); // Read Joysticks X-axis
@@ -68,42 +70,33 @@ void loop()
   //Serial.print("Sending "); Serial.println(radiopacket[0]);
   //radiopacket[] = 0;
   
-  Serial.println("Sending..."); Serial.println(xAxis); Serial.println(yAxis);
+  //Serial.println("Sending..."); Serial.println(xAxis); Serial.println(yAxis);
   delay(10);
   rf95.send((uint8_t *)radiopacket, 4);
   delay(10);
   rf95.waitPacketSent();
 
-/*
-
-  Serial.println("Waiting for packet to complete..."); 
+  //Serial.println("Waiting for packet to complete..."); 
   delay(10);
   rf95.waitPacketSent();
   // Now wait for a reply
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-  Serial.println("Waiting for reply...");
+  //Serial.println("Waiting for reply...");
   if (rf95.waitAvailableTimeout(1000))
   { 
     // Should be a reply message for us now   
     if (rf95.recv(buf, &len))
    {
-      Serial.print("Got reply: ");
-      Serial.println((char*)buf);
-      Serial.print("RSSI: ");
-      Serial.println(rf95.lastRssi(), DEC);    
+    distance = buf;
+    Serial.println("Distance: ");
+    Serial.println(distance);
+    //Serial.println("cm");    
     }
     else
     {
       Serial.println("Receive failed");
     }
-  }
-  else
-  {
-    Serial.println("No reply, is there a listener around?");
-  }
-
-*/
-
+  } 
 }
