@@ -89,7 +89,7 @@ void loop()
     // Should be a reply message for us now   
     if (rf95.recv(buf, &len))
    {
-    distance = buf;
+    distance = buf[0] + buf[1]*256;
     Serial.println("Distance: ");
     Serial.println(distance);
     //Serial.println("cm");    
