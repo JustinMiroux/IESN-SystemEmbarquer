@@ -121,7 +121,6 @@ void loop() {
       packet[0] = distance;
       rf95.send((uint8_t*)packet,sizeof(packet));
       rf95.waitPacketSent();
-      Serial.println("envoi distance");
       Serial.println(distance);
       delay(10);
     }
