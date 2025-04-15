@@ -99,30 +99,40 @@ void loop() {
   //Serial.print(distance);
   //Serial.println("cm");
 
+  //envoi de la distance
+  int packet[1];
+    packet[0] = distance;
+    rf95.send((uint8_t*)packet,sizeof(packet));
+    rf95.waitPacketSent();
+    //Serial.println(distance);
+    delay(10);
+
   int buff;
   if (rf95.available())
   {
+
     // Should be a message for us now
     uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
     uint8_t  len = sizeof(buf);
 
+    //attend et lis données du joystick envoié via Lora
     if (rf95.recv(buf, &len))
     {
       digitalWrite(LED, HIGH);
       // RH_RF95::printBuffer("Received: ", buf, len);
       xAxis = buf[0] + buf[1]*256;
       yAxis = buf[2] + buf[3]*256;
-      //Serial.print("Valeur x: ");
-      //Serial.println(xAxis);
-      //Serial.print("Valeur y: ");
-      //Serial.println(yAxis);
+      Serial.print("Valeur x: ");
+      Serial.println(xAxis);
+      Serial.print("Valeur y: ");
+      Serial.println(yAxis);
 
-      int packet[1];
-      packet[0] = distance;
-      rf95.send((uint8_t*)packet,sizeof(packet));
-      rf95.waitPacketSent();
-      Serial.println(distance);
-      delay(10);
+      //int packet[1];
+      //packet[0] = distance;
+      //rf95.send((uint8_t*)packet,sizeof(packet));
+      //rf95.waitPacketSent();
+      //Serial.println(distance);
+      //delay(10);
     }
 
     else
