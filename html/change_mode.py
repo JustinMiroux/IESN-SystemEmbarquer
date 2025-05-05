@@ -21,3 +21,4 @@ ser.write(encoded_data)
 ligne = ser.readline()
 strlignes = ligne.decode("utf-8")
 print(strlignes)
+"""va falloir mettre ça dans une db"""
