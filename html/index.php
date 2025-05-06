@@ -7,40 +7,43 @@
 	</head>
 	<body>
 		<?php
-			
+
+			try {
+				$pdo = new PDO("sqlite:sqlite.db");
+				$pdo->exec('CREATE TABLE IF NOT EXISTS mode (automated)');
+			}
+
+			catch (Exception $e) {
+				echo 'Caught exception: ', $e->getMessage(), "\n";
+			}
+
 			if(isset($_POST["auto"])){
-				$convertedCmd = escapeshellcmd("python ./change_mode.py auto"); //Converti une commande sous le bon format
-				$answer = shell_exec($convertedCmd); //execute + renvoi reponse
-				echo $answer; //ecrit la reponse sur la page web
 
 				try {
-					$mydb = new PDO("sqlite:sqlite.db");
-					
-					$sql = 'SELECT * FROM distance';
-					foreach ($mydb->query($sql) as $row) {
-						print_r($row);
-					}
+					$pdo = new PDO("sqlite:sqlite.db");
+					$sql = 'SELECT * FROM distance ORDER BY ROWID ASC LIMIT 1';
+					echo $sql;
+
+					$sql = 'UPDATE mode SET automated = 1';
+					$stmt = pdo->prepare($sql);
+					$stmt = $stmt->execute();
 				}
 
 				catch (Exception $e) {
 					echo 'Caught exception: ', $e->getMessage(), "\n";
 				}
-
-				
 			}
 
 			if(isset($_POST["manual"])){
-				$convertedCmd = escapeshellcmd("python ./change_mode.py manual"); //Converti une commande sous le bon format
-				$answer = shell_exec($convertedCmd); //execute + renvoi reponse
-				echo $answer; //ecrit la reponse sur la page web
-
+				
 				try {
-					$mydb = new PDO("sqlite:sqlite.db");
-					
-					$sql = 'SELECT * FROM distance';
-					foreach ($mydb->query($sql) as $row) {
-						print_r($row);
-					}
+					$pdo = new PDO("sqlite:sqlite.db");
+					$sql = 'SELECT * FROM distance ORDER BY ROWID ASC LIMIT 1';
+					echo $sql;
+
+					$sql = 'UPDATE mode SET automated = 0';
+					$stmt = pdo->prepare($sql);
+					$stmt = $stmt->execute();
 				}
 
 				catch (Exception $e) {

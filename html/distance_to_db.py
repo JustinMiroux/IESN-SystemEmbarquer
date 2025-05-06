@@ -25,6 +25,12 @@ with sqlite3.connect("sqlite.db") as conn:
             print(strligne)
             cur.execute("""UPDATE distance SET distance = ?""",(strligne,))
             conn.commit()
+
+            try:
+                cur.execute("""SELECT * FROM mode""")
+        
+            except sqlite3.DatabaseError as e:
+                print("Failed to read DB : \n", e)
     
     except sqlite3.DatabaseError as e:
         print("Something happened : \n", e)
