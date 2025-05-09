@@ -58,7 +58,9 @@ void loop()
 {
   if (Serial.available() > 0) {
 
-    Buffer = Serial.readStringUntil('\r\n');
+    Buffer = Serial.readStringUntil('\n');
+    Serial.flush();
+    Buffer = Buffer.substring(0,4);
     
   }
   int xAxis = analogRead(A0); // Read Joysticks X-axis
@@ -68,30 +70,29 @@ void loop()
     mode = 1;
   }
 
-  else if (Buffer == "manual") {
+  else if (Buffer == "manu") {
     mode = 0;
   }
 
   delay(10);
-  int radiopacket[3] = {xAxis, yAxis};
+  int radiopacket[5] = {xAxis, yAxis, mode};
   
-  Serial.println("Sending..."); Serial.println(xAxis); Serial.println(yAxis);
   delay(10);
-  rf95.send((uint8_t *)radiopacket, 4);
+  rf95.send((uint8_t *)radiopacket, 6);
   delay(10);
   rf95.waitPacketSent();
+  delay(10);
 
   uint8_t buf[RH_RF95_MAX_MESSAGE_LEN];
   uint8_t len = sizeof(buf);
 
-  if (rf95.waitAvailableTimeout(1000))
+  if (rf95.available() > 0)
   { 
 
     if (rf95.recv(buf, &len))
     {
     
       distance = buf[0] + buf[1]*256;
-      Serial.println(distance);
     
     }
 
@@ -99,5 +100,12 @@ void loop()
     {
       Serial.println("Receive failed");
     }
-  } 
+    
+  }
+  else{
+    Serial.println("Test available");
+  }
+
+  Serial.println(distance);
+  
 }

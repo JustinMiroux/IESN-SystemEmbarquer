@@ -1,4 +1,4 @@
-import sqlite3, serial, time
+import sqlite3, serial
 
 with sqlite3.connect("sqlite.db") as conn:
     print(type(conn))
@@ -18,8 +18,6 @@ with sqlite3.connect("sqlite.db") as conn:
         cur.execute("""INSERT INTO distance (distance) VALUES (?)""",(strligne,))
 
         while True:
-
-            time.sleep(1)
             ligne=ser.readline()
             strlignes = ligne.decode("utf-8")
             strligne = strlignes.strip()
@@ -27,24 +25,20 @@ with sqlite3.connect("sqlite.db") as conn:
             cur.execute("""UPDATE distance SET distance = ?""",(strligne,))
             conn.commit()
 
-            try:
+            cur.execute("""SELECT * FROM mode""")
+            list = cur.fetchall()
+            tuple = list[0]
+            boolean = tuple[0]
 
-                cur.execute("""SELECT * FROM mode""")
-                list = cur.fetchall()
-                tuple = list[0]
-                boolean = tuple[0]
-
-                if boolean == 1:
-                    data = "auto"
-
-                else:
-                    data = "manual"
-                
+            if boolean == 1:
+                data = "auto"
                 encoded_data = data.encode("utf-8")
                 ser.write(encoded_data)
-        
-            except sqlite3.DatabaseError as e:
-                print("Failed to read DB : \n", e)
+
+            else:
+                data = "manual"
+                encoded_data = data.encode("utf-8")
+                ser.write(encoded_data)
     
     except sqlite3.DatabaseError as e:
         print("Something happened : \n", e)

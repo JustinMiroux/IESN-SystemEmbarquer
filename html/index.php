@@ -20,7 +20,7 @@
 						$final = explode("'", $debug);
 						echo "distance: ";
 						echo $final[3];
-						echo "cm";	
+						echo "cm";
 					
 					$convertedCmd = escapeshellcmd("python ./buttons_to_db.py auto"); //Converti une commande sous le bon format
 					shell_exec($convertedCmd); //execute + renvoi reponse
@@ -42,7 +42,9 @@
 						$debug = var_export($row, true);
 						}
 						$final = explode("'", $debug);
+						echo "distance: ";
 						echo $final[3];
+						echo "cm";
 						
 					$convertedCmd = escapeshellcmd("python ./buttons_to_db.py manual"); //Converti une commande sous le bon format
 					shell_exec($convertedCmd); //execute + renvoi reponse
