@@ -8,25 +8,21 @@
 	<body>
 		<?php
 
-			try {
-				$pdo = new PDO("sqlite:sqlite.db");
-				$pdo->exec('CREATE TABLE IF NOT EXISTS mode (automated)');
-			}
-
-			catch (Exception $e) {
-				echo 'Caught exception: ', $e->getMessage(), "\n";
-			}
-
 			if(isset($_POST["auto"])){
 
 				try {
-					$pdo = new PDO("sqlite:sqlite.db");
-					$sql = 'SELECT * FROM distance ORDER BY ROWID ASC LIMIT 1';
-					echo $sql;
+					$db = new SQLite3('sqlite.db');
+					$blow = [];
+					$results = $db->query('SELECT * FROM distance');
+					while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+						$debug = var_export($row, true);
+						}
+						$final = explode("'", $debug);
+						echo $final[3];		
+					
+					$convertedCmd = escapeshellcmd("python ./buttonstodb.py auto"); //Converti une commande sous le bon format
+					shell_exec($convertedCmd); //execute + renvoi reponse
 
-					$sql = 'UPDATE mode SET automated = 1';
-					$stmt = pdo->prepare($sql);
-					$stmt = $stmt->execute();
 				}
 
 				catch (Exception $e) {
@@ -37,13 +33,18 @@
 			if(isset($_POST["manual"])){
 				
 				try {
-					$pdo = new PDO("sqlite:sqlite.db");
-					$sql = 'SELECT * FROM distance ORDER BY ROWID ASC LIMIT 1';
-					echo $sql;
+					$db = new SQLite3('sqlite.db');
+					$blow = [];
+					$results = $db->query('SELECT * FROM distance');
+					while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+						$debug = var_export($row, true);
+						}
+						$final = explode("'", $debug);
+						echo $final[3];
+						
+					$convertedCmd = escapeshellcmd("python ./buttonstodb.py manual"); //Converti une commande sous le bon format
+					shell_exec($convertedCmd); //execute + renvoi reponse
 
-					$sql = 'UPDATE mode SET automated = 0';
-					$stmt = pdo->prepare($sql);
-					$stmt = $stmt->execute();
 				}
 
 				catch (Exception $e) {
