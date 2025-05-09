@@ -18,7 +18,9 @@
 						$debug = var_export($row, true);
 						}
 						$final = explode("'", $debug);
-						echo $final[3];		
+						echo "distance: ";
+						echo $final[3];
+						echo "cm";	
 					
 					$convertedCmd = escapeshellcmd("python ./buttonstodb.py auto"); //Converti une commande sous le bon format
 					shell_exec($convertedCmd); //execute + renvoi reponse
