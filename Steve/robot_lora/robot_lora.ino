@@ -17,7 +17,7 @@
 #define RFM95_CS      4   // "B"
 #define RFM95_INT     3    // "C"
 
-#define RF95_FREQ 434.0
+#define RF95_FREQ 430.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -107,7 +107,7 @@ void loop() {
     //Serial.println(distance);
     delay(10);
 
-  int buff;
+  //int buff;
   if (rf95.available())
   {
 
@@ -140,10 +140,10 @@ void loop() {
       Serial.println("Message receiving failed");
     }
   }
-  //Serial.print("Valeur x post: ");
-  //Serial.println(xAxis);
-  //Serial.print("Valeur y post: ");
-  //Serial.println(yAxis);
+  // Serial.print("Valeur x post: ");
+  // Serial.println(xAxis);
+  // Serial.print("Valeur y post: ");
+  // Serial.println(yAxis);
   // Y-axis used for forward and backward control
   if (yAxis < 470) {
     //Serial.println("boucle y < 470");

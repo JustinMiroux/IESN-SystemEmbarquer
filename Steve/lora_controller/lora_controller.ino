@@ -5,7 +5,7 @@
 #define RFM95_RST 2   // "D"
 #define RFM95_INT 3   // "B"
 
-#define RF95_FREQ 434.0
+#define RF95_FREQ 430.0
 
 // Singleton instance of the radio driver
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
@@ -55,9 +55,15 @@ void setup()
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
 int distance; //variable contenant distance reçue par robot
-
+// String Buffer = "";
 void loop()
 {
+  // if (Serial.available() > 0) {
+
+  //   Buffer = Serial.readStringUntil('\r\n');
+  //   Serial.println(Buffer);
+    
+  // }
   int xAxis = analogRead(A0); // Read Joysticks X-axis
   int yAxis = analogRead(A1); // Read Joysticks Y-axis
 
@@ -70,7 +76,7 @@ void loop()
   //Serial.print("Sending "); Serial.println(radiopacket[0]);
   //radiopacket[] = 0;
   
-  //Serial.println("Sending..."); Serial.println(xAxis); Serial.println(yAxis);
+  Serial.println("Sending..."); Serial.println(xAxis); Serial.println(yAxis);
   delay(10);
   rf95.send((uint8_t *)radiopacket, 4);
   delay(10);
@@ -88,9 +94,9 @@ void loop()
     if (rf95.recv(buf, &len))
    {
     distance = buf[0] + buf[1]*256;
-    Serial.println("Distance: ");
+    //Serial.println("Distance: ");
     Serial.println(distance);
-    Serial.println("cm");    
+    //Serial.println("cm");    
     }
     else
     {
