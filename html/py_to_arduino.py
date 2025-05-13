@@ -27,7 +27,20 @@ with sqlite3.connect("sqlite.db") as conn:
             conn.commit()
 
             try:
+
                 cur.execute("""SELECT * FROM mode""")
+                list = cur.fetchall()
+                tuple = list[0]
+                boolean = tuple[1]
+
+                if boolean == 1:
+                    data = "auto"
+
+                else:
+                    data = "manual"
+                
+                encoded_data = data.encode("utf-8")
+                ser.write(encoded_data)
         
             except sqlite3.DatabaseError as e:
                 print("Failed to read DB : \n", e)

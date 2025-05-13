@@ -7,40 +7,46 @@
 	</head>
 	<body>
 		<?php
-			
+
 			if(isset($_POST["auto"])){
-				$convertedCmd = escapeshellcmd("python ./change_mode.py auto"); //Converti une commande sous le bon format
-				$answer = shell_exec($convertedCmd); //execute + renvoi reponse
-				echo $answer; //ecrit la reponse sur la page web
 
 				try {
-					$mydb = new PDO("sqlite:sqlite.db");
+					$db = new SQLite3('sqlite.db');
+					$blow = [];
+					$results = $db->query('SELECT * FROM distance');
+					while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+						$debug = var_export($row, true);
+						}
+						$final = explode("'", $debug);
+						echo "distance: ";
+						echo $final[3];
+						echo "cm";	
 					
-					$sql = 'SELECT * FROM distance';
-					foreach ($mydb->query($sql) as $row) {
-						print_r($row);
-					}
+					$convertedCmd = escapeshellcmd("python ./buttonstodb.py auto"); //Converti une commande sous le bon format
+					shell_exec($convertedCmd); //execute + renvoi reponse
+
 				}
 
 				catch (Exception $e) {
 					echo 'Caught exception: ', $e->getMessage(), "\n";
 				}
-
-				
 			}
 
 			if(isset($_POST["manual"])){
-				$convertedCmd = escapeshellcmd("python ./change_mode.py manual"); //Converti une commande sous le bon format
-				$answer = shell_exec($convertedCmd); //execute + renvoi reponse
-				echo $answer; //ecrit la reponse sur la page web
-
+				
 				try {
-					$mydb = new PDO("sqlite:sqlite.db");
-					
-					$sql = 'SELECT * FROM distance';
-					foreach ($mydb->query($sql) as $row) {
-						print_r($row);
-					}
+					$db = new SQLite3('sqlite.db');
+					$blow = [];
+					$results = $db->query('SELECT * FROM distance');
+					while ($row = $results->fetchArray(SQLITE3_ASSOC)) {
+						$debug = var_export($row, true);
+						}
+						$final = explode("'", $debug);
+						echo $final[3];
+						
+					$convertedCmd = escapeshellcmd("python ./buttonstodb.py manual"); //Converti une commande sous le bon format
+					shell_exec($convertedCmd); //execute + renvoi reponse
+
 				}
 
 				catch (Exception $e) {
