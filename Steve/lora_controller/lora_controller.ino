@@ -54,37 +54,16 @@ void setup()
 
 int16_t packetnum = 0;  // packet counter, we increment per xmission
 
-int distance = 30; //variable contenant distance reçue par robot
-int xAxis;
-int yAxis;
-String Buffer = "";
+int distance; //variable contenant distance reçue par robot
 
 void loop()
 {
- 
-  if (Serial.available() > 0) {
-
-    Buffer = Serial.readStringUntil('\r\n');
-
-    while (Buffer == "auto") {
-      //tout droit
-      xAxis = 512;
-      yAxis = 0;
-      while (distance < 20) {
-        //a gauche
-        xAxis = 128;
-        yAxis = 512; 
-      }     
-    }
-  }
-  else{
-    xAxis = analogRead(A0); // Read Joysticks X-axis
-    yAxis = analogRead(A1); // Read Joysticks Y-axis
-  }
- 
+  int xAxis = analogRead(A0); // Read Joysticks X-axis
+  int yAxis = analogRead(A1); // Read Joysticks Y-axis
 
   delay(10); // Wait 1 second between transmits, could also 'sleep' here!
   //Serial.println("Transmitting..."); // Send a message to rf95_server
+  
   //char radiopacket[] = "Bonjour c'est justin";
   int radiopacket[2] = {xAxis, yAxis};
   //itoa(packetnum++, radiopacket+13, 10);
@@ -109,9 +88,9 @@ void loop()
     if (rf95.recv(buf, &len))
    {
     distance = buf[0] + buf[1]*256;
-    //Serial.println("Distance: ");
-    //Serial.println(distance);
-    //Serial.println("cm");    
+    Serial.println("Distance: ");
+    Serial.println(distance);
+    Serial.println("cm");    
     }
     else
     {
