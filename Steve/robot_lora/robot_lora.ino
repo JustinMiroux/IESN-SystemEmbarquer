@@ -23,7 +23,7 @@
 RH_RF95 rf95(RFM95_CS, RFM95_INT);
 
 // Blinky on receipt
-#define LED 13
+//#define LED 13
 
 // Moteur 1 (Gauche) :
 #define enA 10
@@ -53,7 +53,7 @@ void setup() {
   pinMode(in3, OUTPUT);
   pinMode(in4, OUTPUT);
 
-  pinMode(LED, OUTPUT);
+  //pinMode(LED, OUTPUT);
   pinMode(RFM95_RST, OUTPUT);
   digitalWrite(RFM95_RST, HIGH);
 
@@ -102,9 +102,9 @@ void loop() {
   //envoi de la distance
   int packet[1];
     packet[0] = distance;
-    rf95.send((uint8_t*)packet,sizeof(packet));
+    rf95.send((uint8_t*)packet,2*sizeof(packet));
     rf95.waitPacketSent();
-    //Serial.println(distance);
+   // Serial.println(distance);
     delay(10);
 
   //int buff;
@@ -118,7 +118,7 @@ void loop() {
     //attend et lis données du joystick envoié via Lora
     if (rf95.recv(buf, &len))
     {
-      digitalWrite(LED, HIGH);
+      //digitalWrite(LED, HIGH);
       // RH_RF95::printBuffer("Received: ", buf, len);
       xAxis = buf[0] + buf[1]*256;
       yAxis = buf[2] + buf[3]*256;
@@ -139,6 +139,10 @@ void loop() {
     {
       Serial.println("Message receiving failed");
     }
+  }
+  else{
+Serial.println("no message");
+
   }
   // Serial.print("Valeur x post: ");
   // Serial.println(xAxis);
