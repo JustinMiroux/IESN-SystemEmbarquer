@@ -1,4 +1,4 @@
-import sqlite3, serial
+import sqlite3, serial, time
 
 with sqlite3.connect("sqlite.db") as conn:
     print(type(conn))
@@ -19,6 +19,7 @@ with sqlite3.connect("sqlite.db") as conn:
 
         while True:
 
+            time.sleep(1)
             ligne=ser.readline()
             strlignes = ligne.decode("utf-8")
             strligne = strlignes.strip()
@@ -31,7 +32,7 @@ with sqlite3.connect("sqlite.db") as conn:
                 cur.execute("""SELECT * FROM mode""")
                 list = cur.fetchall()
                 tuple = list[0]
-                boolean = tuple[1]
+                boolean = tuple[0]
 
                 if boolean == 1:
                     data = "auto"

@@ -22,7 +22,7 @@
 						echo $final[3];
 						echo "cm";	
 					
-					$convertedCmd = escapeshellcmd("python ./buttonstodb.py auto"); //Converti une commande sous le bon format
+					$convertedCmd = escapeshellcmd("python ./buttons_to_db.py auto"); //Converti une commande sous le bon format
 					shell_exec($convertedCmd); //execute + renvoi reponse
 
 				}
@@ -44,7 +44,7 @@
 						$final = explode("'", $debug);
 						echo $final[3];
 						
-					$convertedCmd = escapeshellcmd("python ./buttonstodb.py manual"); //Converti une commande sous le bon format
+					$convertedCmd = escapeshellcmd("python ./buttons_to_db.py manual"); //Converti une commande sous le bon format
 					shell_exec($convertedCmd); //execute + renvoi reponse
 
 				}

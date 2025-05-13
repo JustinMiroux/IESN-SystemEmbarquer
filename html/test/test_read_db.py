@@ -7,6 +7,7 @@ with sqlite3.connect("sqlite.db") as conn:
 
     cur.execute("""SELECT * FROM mode""")
     test = cur.fetchall()
+    print(test)
     testuple = test[0]
     print(type(testuple))
     print(testuple[0])
