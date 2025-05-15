@@ -116,6 +116,20 @@ void loop() {
     }
 
   }
+
+  if (mode == 1)
+  {
+    if (distance < 20)
+    {
+      yAxis = 512;
+      xAxis = 800;
+    }
+    else
+    {
+      yAxis = 0;
+      xAxis = 512;
+    }
+  }
   
   // Y-axis used for forward and backward control
   if (yAxis < 470) {
