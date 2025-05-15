@@ -96,16 +96,13 @@ void loop() {
       xAxis = buf[0] + buf[1]*256;
       yAxis = buf[2] + buf[3]*256;
       mode = buf[4] + buf[5]*256;
-      Serial.print("Valeur x: ");
-      Serial.println(xAxis);
-      Serial.print("Valeur y: ");
-      Serial.println(yAxis);
-      Serial.print("Mode : ");
-      Serial.println(mode);
+      // Serial.print("Mode : ");
+      // Serial.println(mode);
 
       //envoi de la distance
       int packet[1];
       packet[0] = distance;
+      Serial.println(distance);
       rf95.send((uint8_t*)packet,sizeof(packet));
       rf95.waitPacketSent();
     }
@@ -119,17 +116,26 @@ void loop() {
 
   if (mode == 1)
   {
-    if (distance < 20)
+    if (distance < 40)
     {
+      delay(100);
+      yAxis = 960;
+      xAxis = 512;
+      delay(100);
       yAxis = 512;
-      xAxis = 800;
+      xAxis = 960;
+      delay(10);
     }
     else
     {
-      yAxis = 0;
+      yAxis = 64;
       xAxis = 512;
     }
   }
+    // Serial.print("Valeur x: ");
+    // Serial.println(xAxis);
+    // Serial.print("Valeur y: ");
+    // Serial.println(yAxis);
   
   // Y-axis used for forward and backward control
   if (yAxis < 470) {
